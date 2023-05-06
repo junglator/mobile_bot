@@ -1,0 +1,264 @@
+<?xml version="1.0"?>
+<robot name="mobile" xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <xacro:property name ="PI" value="3.1415926535897931"/>
+
+    <xacro:property name="wheel_radius" value="0.06925"/>
+    <xacro:property name="wheel_width" value = "0.037"/>
+    
+    <material name="panda_white"><color rgba="1. 1. 1. 1."/></material>
+    <material name="dark_grey"><color rgba="0.2 0.2 0.2 1.0"/></material>
+    <material name="light_grey"><color rgba="0.4 0.4 0.4 1.0"/></material>
+    <material name="red"><color rgba="0.8 0.0 0.0 1.0"/></material>
+    <material name="white"><color rgba="0.9 0.9 0.9 1.0"/></material>
+    <material name="black"><color rgba="0.15 0.15 0.15 1.0"/></material>
+
+    <link name = "chassis">
+        <visual>
+            <origin xyz = "0 0 0" rpy = "0 0 0"/>
+            <geometry>
+                <mesh filename = "file://$(find mobile_bot)/meshes/mobile_bot/chassis_o.obj"/>
+            </geometry>
+            <material name="dark_grey"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0"/>
+            <geometry>
+                <mesh filename = "file://$(find mobile_bot)/meshes/mobile_bot/chassis_o.obj"/>
+            </geometry>
+            <material name="dark_grey"/>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value = "30.00"/>
+            <!--calcuated on the basis of dimension-->
+            <inertia
+                ixx = "1.7755" ixy="0.00" ixz="0.00"
+                iyy = "1.40" iyz="0.00"   
+                izz = "2.825"/>
+        </inertial>
+    </link>
+
+    <xacro:macro name="wheelL" params="prefix">
+        <link name = "left_${prefix}_wheel">
+            <visual>
+                <origin xyz="0 0 0" rpy = "0 0 0"/>
+                <geometry>
+                    <mesh filename = "file://$(find mobile_bot)/meshes/mobile_bot/Wheel_Left.obj" scale = "0.1 0.1 0.1"/>
+                </geometry>
+                <material name = "black"/>
+            </visual> 
+            <collision>
+                <origin xyz = "0 0 0" rpy = "0 0 0"/>
+                <geometry>
+                    <mesh filename = "file://$(find mobile_bot)/meshes/mobile_bot/Wheel_Left.obj" scale = "0.1 0.1 0.1"/>
+                </geometry>
+                <material name = "black"/>
+            </collision>
+            <inertial>
+                <origin xyz = "0 0 0" rpy="0 0 0"/>                     
+                <mass value = "0.329"/>
+                <inertia
+                    ixx = "0.0000129" ixy="0.00" ixz="0.00"
+                    iyy = "0.000086529" iyz="0.0"
+                    izz = "0.000086529"/>
+            </inertial>
+        </link>
+    </xacro:macro>
+
+    <xacro:wheelL prefix="front"/>
+    <xacro:wheelL prefix="rear"/>
+
+    <xacro:macro name="wheelR" params="prefix">
+    <link name = "right_${prefix}_wheel">
+        <visual>
+            <origin xyz="0 0 0" rpy = "0 0 0"/>
+            <geometry>
+                <mesh filename = "file://$(find mobile_bot)/meshes/mobile_bot/Wheel_Right.obj" scale = "0.1 0.1 0.1"/>
+            </geometry>
+            <material name = "black"/>
+        </visual> 
+        <collision>
+            <origin xyz = "0 0 0" rpy = "0 0 0"/>
+            <geometry>
+                <mesh filename = "file://$(find mobile_bot)/meshes/mobile_bot/Wheel_Right.obj" scale = "0.1 0.1 0.1"/>
+            </geometry>
+            <material name = "black"/>
+        </collision>
+        <inertial>
+            <origin xyz = "0 0 0" rpy="0 0 0"/>
+            <mass value = "0.329"/>
+            <inertia
+                ixx = "0.0000129" ixy="0.00" ixz="0.00"
+                iyy = "0.000086529" iyz="0.0"
+                izz = "0.000086529"/>
+        </inertial>
+    </link>
+    </xacro:macro>
+
+    <xacro:wheelR prefix="front"/>
+    <xacro:wheelR prefix="rear"/>
+
+    <xacro:macro name="bin" params = "prefix">
+        <link name = "bin_${prefix}">
+            <visual>
+                <origin xyz="0 0 0" rpy = "0 0 0"/>
+                <geometry>
+                    <mesh filename = "file://$(find mobile_bot)/meshes/mobile_bot/bin.obj"/>
+                </geometry>
+                <material name = "red"/>
+            </visual> 
+            <collision>
+                <origin xyz = "0 0 0" rpy = "0 0 0"/>
+                <geometry>
+                    <mesh filename = "file://$(find mobile_bot)/meshes/mobile_bot/bin.obj"/>
+                </geometry>
+                <material name = "red"/>
+            </collision>
+            <inertial>
+                <origin xyz = "0 0 0" rpy="0 0 0"/>
+                <mass value = "0.200"/>
+                <inertia
+                    ixx = "0.004" ixy="0.00" ixz="0.00"
+                    iyy = "0.004" iyz="0.0"
+                    izz = "0.004"/>
+            </inertial>
+        </link>
+    </xacro:macro>
+
+    <xacro:bin prefix="red"/>
+    <xacro:bin prefix="green"/>
+
+    
+    <xacro:macro name= "camera" params="prefix">
+        <link name = "camera_${prefix}">
+            <visual>
+                <origin xyz="0 0 0" rpy = "0 0 0"/>
+                <geometry>
+                    <mesh filename = "file://$(find mobile_bot)/meshes/mobile_bot/realsense.obj" scale="0.001 0.001 0.001"/>
+                </geometry>
+                <material name = "light_grey"/>
+            </visual> 
+            <collision>
+                <origin xyz = "0 0 0" rpy = "0 0 0"/>
+                <geometry>
+                    <mesh filename = "file://$(find mobile_bot)/meshes/mobile_bot/realsense.obj" scale="0.001 0.001 0.001"/>
+                </geometry>
+                <material name = "light_grey"/>
+            </collision>
+            <inertial>
+                <origin xyz = "0 0 0" rpy="0 0 0"/>
+                <mass value = "0.057836"/>
+                <inertia
+                    ixx = "0.0000046258" ixy="0.00" ixz="0.00"
+                    iyy = "0.000052583276" iyz="0.0"
+                    izz = "0.000052583276"/>
+            </inertial>
+        </link>
+    </xacro:macro>
+
+    <xacro:camera prefix="one"/>
+
+    <!--##################### LASER Link ####################-->
+
+    <link name="laser_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+    </link>
+
+    <!--##################### IMU Link ####################-->
+    
+    <link name="imu_link">
+        <inertial>
+            <mass value="0.001"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <inertia ixx="1e-09" ixy="0.0" ixz="0.0"
+                     iyy="1e-09" iyz="0.0" izz="1e-09"/>
+        </inertial>
+    </link>
+
+    <!--######################Battery#########################-->
+
+    <link name="battery">
+        <visual>
+            <origin xyz="0 0 0" rpy = "0 0 0"/>
+            <geometry>
+                <box size = "0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+    </link>
+
+    <!--###################### JOINTS ########################-->
+
+    <joint name="front_left_wheel_joint" type ="continuous">
+        <origin xyz="-0.273 0.2237 -0.12" rpy="0 0 0"/>
+        <parent link = "chassis"/>
+        <child link = "right_front_wheel"/>
+        <axis xyz="-1 0 0 "/>
+    </joint>
+
+    <joint name="rear_left_wheel_joint" type ="continuous">
+        <origin xyz="-0.273 -0.2237 -0.12" rpy="0 0 0"/>
+        <parent link = "chassis"/>
+        <child link = "left_rear_wheel"/>
+        <axis xyz="-1 0 0"/>
+    </joint>
+
+    <joint name="front_right_wheel_joint" type ="continuous">
+        <origin xyz="0.273 0.2237 -0.12" rpy="0 0 0"/>
+        <parent link = "chassis"/>
+        <child link = "left_front_wheel"/>
+        <axis xyz="-1 0 0"/>
+    </joint>
+
+    <joint name="rear_right_wheel_joint" type ="continuous">
+        <origin xyz="0.273 -0.2237 -0.12" rpy="0 0 0"/>
+        <parent link = "chassis"/>
+        <child link = "right_rear_wheel"/>
+        <axis xyz="-1 0 0"/>
+    </joint>
+
+    <joint name= "bin_joint_one" type="fixed">
+        <origin xyz="0.185 -0.15 0.231" rpy="${PI/2} 0 0"/>
+        <parent link = "chassis"/>
+        <child link = "bin_red"/>
+        <axis xyz = "1 0 0"/>
+    </joint>
+
+    <joint name= "bin_joint_two" type="fixed">
+        <origin xyz="-0.185 -0.15 0.231" rpy="${PI/2} 0 0"/>
+        <parent link = "chassis"/>
+        <child link = "bin_green"/>
+        <axis xyz = "1 0 0"/>
+    </joint>
+
+    <joint name= "camera_joint" type="fixed">
+        <origin xyz="0.0 0.395 0.074" rpy="${-PI/2} 0 0"/>
+        <parent link = "chassis"/>
+        <child link = "camera_one"/>
+        <axis xyz = "1 0 0"/>
+    </joint>
+
+    <joint name="imu_joint" type="fixed">
+        <parent link="chassis" />
+        <child link="imu_link" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <joint name="laser_link_joint" type="fixed">
+        <parent link="camera_one" />
+        <child link="laser_link" />
+        <origin xyz="0 0 0" rpy="1.57 -1.57 0"/>
+    </joint>
+
+    <joint name="battery_joint" type="fixed">
+        <parent link="chassis" />
+        <child link="battery" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+</robot>
