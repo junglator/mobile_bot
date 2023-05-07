@@ -1,35 +1,89 @@
 <?xml version="1.0"?>
 
 <robot>
+
     <gazebo reference="chassis">
         <gravity>true</gravity>
     </gazebo>
 
                     <!--IMU PLUGIN-->
     
-    <gazebo reference = "imu_link">
+    <gazebo reference="imu_link">
       <gravity>true</gravity>
-      <sensor name = "imu_sensor" type="imu">
-        <always_on>true</always_on>
-        <plugin name="imu_plugin" filename="libgazebo_ros_imu_sensor.so">
-          <updateRate>30.0</updateRate>
-          <bodyName>imu_link</bodyName>
-          <topicName>imu/data</topicName>
-          <frameName>imu_link</frameName>
-          <!--gaussianNoise>0.001</gaussianNoise-->
-          <xyzOffset>0 0 0</xyzOffset>
-          <rpyOffset>0 0 0</rpyOffset>
-          <initialOrientationAsReference>false</initialOrientationAsReference>
+        <sensor name="imu_sensor" type="imu">
+        <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+          <ros>
+            <namespace>/</namespace>
+            <remapping>~/out:=imu</remapping>
+          </ros>
+          <initial_orientation_as_reference>false</initial_orientation_as_reference>
         </plugin>
-        <pose>0 0 0 0 0 0</pose>
+        <always_on>true</always_on>
+        <update_rate>100</update_rate>
+        <visualize>true</visualize>
+        <imu>
+          <angular_velocity>
+            <x>
+              <noise type="gaussian">
+              <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+                <bias_mean>0.0000075</bias_mean>
+                <bias_stddev>0.0000008</bias_stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+                <bias_mean>0.0000075</bias_mean>
+                <bias_stddev>0.0000008</bias_stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+                <bias_mean>0.0000075</bias_mean>
+                <bias_stddev>0.0000008</bias_stddev>
+              </noise>
+            </z>
+          </angular_velocity>
+          <linear_acceleration>
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+                <bias_mean>0.1</bias_mean>
+                <bias_stddev>0.001</bias_stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+                <bias_mean>0.1</bias_mean>
+                <bias_stddev>0.001</bias_stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+                <bias_mean>0.1</bias_mean>
+                <bias_stddev>0.001</bias_stddev>
+              </noise>
+            </z>
+          </linear_acceleration>
+        </imu>
       </sensor>
     </gazebo>
 
                     <!--CAMERA PLUGIN-->
 
     <gazebo reference="camera_one">
-      <sensor type="camera" name="camera_one_rgb_camera">
-        <update_rate>10.0</update_rate>
+      <sensor type="depth" name="camera_one_rgb_camera">
+        <visualize>true</visualize>
+        <update_rate>30.0</update_rate>
         <camera name="cam_one_rgb_camera">
           <pose>0 0 0 0 -1.57 1.57</pose>
           <horizontal_fov>1.3962634</horizontal_fov>
@@ -39,23 +93,28 @@
             <format>R8G8B8</format>
           </image>
           <clip>
-            <near>0.005</near>
+            <near>0.05</near>
             <far>10.0</far>
           </clip>
         </camera>
         <plugin name="camera_one_controller" filename="libgazebo_ros_camera.so">
+          <baseline>0.2</baseline>
           <alwaysOn>true</alwaysOn>
           <updateRate>0.0</updateRate>
-          <cameraName>rgb_camera</cameraName>
-          <imageTopicName>image_raw</imageTopicName>
-          <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-          <frameName>cam_one_rgb_cam_camera_link_frame</frameName>
+          <frameName>camera_depth_frame</frameName>
+          <pointCloudCutoff>0.5</pointCloudCutoff>
+          <pointCloudCutoffMax>3.0</pointCloudCutoffMax>
           <hackBaseline>0.07</hackBaseline>
           <distortionK1>0.0</distortionK1>
           <distortionK2>0.0</distortionK2>
           <distortionK3>0.0</distortionK3>
           <distortionT1>0.0</distortionT1>
           <distortionT2>0.0</distortionT2>
+          <CxPrime>0</CxPrime>
+          <Cx>0</Cx>
+          <Cy>0</Cy>
+          <focalLength>0</focalLength>
+          <hackBaseline>0</hackBaseline>
         </plugin>
       </sensor>
     </gazebo>
@@ -85,15 +144,15 @@
           <stddev>0.01</stddev>
         </noise>
       </ray>
-      <always_on>1</always_on>
-      <update_rate>30</update_rate>
+      <always_on>true</always_on>
+      <update_rate>10</update_rate>
       <visualize>true</visualize>
       <plugin name="laser_scanner" filename="libgazebo_ros_ray_sensor.so">
         <ros>
           <namespace>/</namespace>
           <argument>--ros-args --remap ~/out:=laser</argument>
         </ros>
-        <output_type>sensor_msgs/PointCloud2</output_type>
+        <output_type>sensor_msgs/LaserScan</output_type>
         <frame_name>laser_link</frame_name>
       </plugin>
     </sensor>
@@ -104,19 +163,21 @@
     <!--gazebo>
     <!instead of using plugins for every wheel; used planar plugin to move the mobile bot>
         <plugin name="mecanum_controller" filename="libgazebo_ros_planar_move.so"> 
-            <commandTopic>cmd_vel</commandTopic>
-            <odometryTopic>odom</odometryTopic>
-            <odometryFrame>odom</odometryFrame>
-            <odometryRate>100.0</odometryRate>
+            <ros>
+              <argument>odom:=odom/unfiltered</argument>
+            </ros>
+            <command_topic>cmd_vel</command_topic>
+            <odometry_topic>odom/unfiltered</odometry_topic>
+            <odometry_frame>odom</odometry_frame>
+            <odometryRate>20.0</odometryRate>
             <update_rate>100</update_rate>
             <publish_rate>10</publish_rate>
-            <robotBaseFrame>base_footprint</robotBaseFrame> 
-            <publishTF>false</publishTF>
-            <covariance_x>0.0001</covariance_x>
-			      <covariance_y>0.0001</covariance_y>
-			      <covariance_yaw>0.01</covariance_yaw>
+            <robot_base_frame>base_footprint</robot_base_frame>
+            <publish_odom>true</publish_odom>
+            <publish_odom_tf>false</publish_odom_tf>
         </plugin>
     </gazebo-->
+
     <gazebo>
       <plugin name="wheel_drive_controller" filename="libgazebo_ros_diff_drive.so">
         <!-- wheels -->
@@ -145,4 +206,5 @@
         <update_rate>100.0</update_rate>
       </plugin>
     </gazebo>
+
 </robot>

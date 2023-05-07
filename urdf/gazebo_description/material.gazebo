@@ -2,8 +2,6 @@
 <robot name="mobile" xmlns:xacro="http://www.ros.org/wiki/xacro" >
 
     <xacro:property name="chassis_color" value="Gazebo/Grey"/>
-    <xacro:property name="bin_one" value="Gazebo/Red"/>
-    <xacro:property name="bin_two" value="Gazebo/Green"/>
     <xacro:property name="wheel_color" value="Gazebo/Black"/>
     <xacro:property name="camera_color" value="Gazebo/FlatBlack"/>
 
@@ -11,14 +9,6 @@
 
     <gazebo reference="chassis">
         <material>${chassis_color}</material>
-    </gazebo>
-
-    <gazebo reference="bin_red">
-        <material>${bin_one}</material>
-    </gazebo>
-
-    <gazebo reference="bin_green">
-        <material>${bin_two}</material>
     </gazebo>
 
     <gazebo reference = "left_front_wheel">

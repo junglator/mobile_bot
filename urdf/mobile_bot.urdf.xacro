@@ -98,38 +98,7 @@
 
     <xacro:wheelR prefix="front"/>
     <xacro:wheelR prefix="rear"/>
-
-    <xacro:macro name="bin" params = "prefix">
-        <link name = "bin_${prefix}">
-            <visual>
-                <origin xyz="0 0 0" rpy = "0 0 0"/>
-                <geometry>
-                    <mesh filename = "file://$(find mobile_bot)/meshes/mobile_bot/bin.obj"/>
-                </geometry>
-                <material name = "red"/>
-            </visual> 
-            <collision>
-                <origin xyz = "0 0 0" rpy = "0 0 0"/>
-                <geometry>
-                    <mesh filename = "file://$(find mobile_bot)/meshes/mobile_bot/bin.obj"/>
-                </geometry>
-                <material name = "red"/>
-            </collision>
-            <inertial>
-                <origin xyz = "0 0 0" rpy="0 0 0"/>
-                <mass value = "0.200"/>
-                <inertia
-                    ixx = "0.004" ixy="0.00" ixz="0.00"
-                    iyy = "0.004" iyz="0.0"
-                    izz = "0.004"/>
-            </inertial>
-        </link>
-    </xacro:macro>
-
-    <xacro:bin prefix="red"/>
-    <xacro:bin prefix="green"/>
-
-    
+       
     <xacro:macro name= "camera" params="prefix">
         <link name = "camera_${prefix}">
             <visual>
@@ -220,20 +189,6 @@
         <parent link = "chassis"/>
         <child link = "right_rear_wheel"/>
         <axis xyz="-1 0 0"/>
-    </joint>
-
-    <joint name= "bin_joint_one" type="fixed">
-        <origin xyz="0.185 -0.15 0.231" rpy="${PI/2} 0 0"/>
-        <parent link = "chassis"/>
-        <child link = "bin_red"/>
-        <axis xyz = "1 0 0"/>
-    </joint>
-
-    <joint name= "bin_joint_two" type="fixed">
-        <origin xyz="-0.185 -0.15 0.231" rpy="${PI/2} 0 0"/>
-        <parent link = "chassis"/>
-        <child link = "bin_green"/>
-        <axis xyz = "1 0 0"/>
     </joint>
 
     <joint name= "camera_joint" type="fixed">
