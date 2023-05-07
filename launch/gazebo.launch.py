@@ -1,54 +1,50 @@
+import launch
+from launch.substitutions import Command, LaunchConfiguration
+from launch_ros.descriptions import ParameterValue
+import launch_ros
 import os
-from ament_index_python.packages import get_package_share_directory
-from launch import LaunchDescription
-from launch.actions import ExecuteProcess
-from launch.substitutions import LaunchConfiguration
-from launch_ros.actions import Node
 
 def generate_launch_description():
-    use_sim_time = LaunchConfiguration('use_sim_time', default='true') # each nodes will need the /use_sim_time parameter set to true
-    robot_name = 'mobile_bot'
-    world_file_name = 'supermarket.sdf'
+    pkg_share = launch_ros.substitutions.FindPackageShare(package='mobile_bot').find('mobile_bot')
+    default_model_path = os.path.join(pkg_share, 'urdf/mobile.urdf')
+    world_path=os.path.join(pkg_share, 'worlds/supermarket.sdf')
+  
+    robot_state_publisher_node = launch_ros.actions.Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        parameters=[{'robot_description': ParameterValue(Command(['cat ', default_model_path]),value_type=str)}]
+    )
+    joint_state_publisher_node = launch_ros.actions.Node(
+        package='joint_state_publisher',
+        executable='joint_state_publisher',
+        name='joint_state_publisher',
+        condition=launch.conditions.UnlessCondition(LaunchConfiguration('gui'))
+    )
+    spawn_entity = launch_ros.actions.Node(
+    	package='gazebo_ros', 
+    	executable='spawn_entity.py',
+        arguments=['-entity', 'mobile_bot', '-topic', 'robot_description'],
+        output='screen'
+    )
 
-    world = os.path.join(get_package_share_directory(
-        robot_name), 'worlds', world_file_name)
+    robot_localization_node = launch_ros.actions.Node(
+         package='robot_localization',
+         executable='ekf_node',
+         name='ekf_filter_node',
+         output='screen',
+         parameters=[os.path.join(pkg_share, 'config/ekf.yaml'), {'use_sim_time': LaunchConfiguration('use_sim_time')}]
+    )
 
-    urdf = os.path.join(get_package_share_directory(
-        robot_name), 'urdf', 'mobile.urdf')
-
-    xml = open(urdf, 'r').read()
-
-    xml = xml.replace('"', '\\"')
-
-    swpan_args = '{name: \"mobile\", xml: \"' + xml + '\" }'
-
-    # Open the URDF file
-    with open(urdf, 'r') as infp:
-        robot_desc = infp.read()
-
-    return LaunchDescription([
-        ExecuteProcess(
-            cmd=['gazebo', '--verbose', world,
-                 '-s', 'libgazebo_ros_factory.so'],
-            output='screen'),
-
-        ExecuteProcess(
-            cmd=['ros2', 'param', 'set', '/gazebo',
-                 'use_sim_time', use_sim_time],
-            output='screen'),
-
-        ExecuteProcess(
-            cmd=['ros2', 'service', 'call', '/spawn_entity',
-                 'gazebo_msgs/SpawnEntity', swpan_args],
-            output='screen'),
-
-        Node(package='robot_state_publisher',executable='robot_state_publisher',
-            name='robot_state_publisher',output='screen',
-            parameters=[{'use_sim_time': use_sim_time, 'robot_description': robot_desc}],
-            arguments=[urdf]),
-        
-        Node(package='joint_state_publisher',executable='joint_state_publisher',
-            name='joint_state_publisher',output='screen',
-            parameters=[{'use_sim_time': use_sim_time, 'robot_description': robot_desc}],
-            arguments=[urdf])
+    return launch.LaunchDescription([
+        launch.actions.DeclareLaunchArgument(name='gui', default_value='True',
+                                            description='Flag to enable joint_state_publisher_gui'),
+        launch.actions.DeclareLaunchArgument(name='model', default_value=default_model_path,
+                                            description='Absolute path to robot urdf file'),
+        launch.actions.DeclareLaunchArgument(name='use_sim_time', default_value='True',
+                                            description='Flag to enable use_sim_time'),
+        launch.actions.ExecuteProcess(cmd=['gazebo', '--verbose', '-s', 'libgazebo_ros_init.so', '-s', 'libgazebo_ros_factory.so', world_path], output='screen'),
+        joint_state_publisher_node,
+        robot_state_publisher_node,
+        spawn_entity,
+        robot_localization_node,
     ])
