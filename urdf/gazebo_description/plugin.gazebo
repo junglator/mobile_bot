@@ -192,7 +192,7 @@
         <max_wheel_torque>20.0</max_wheel_torque>
         <max_wheel_acceleration>10.0</max_wheel_acceleration>
         <!-- odometry  --> 
-        <odometry_source>world</odometry_source>
+        <publish_wheel_tf>true</publish_wheel_tf>
         <odometry_frame>odom</odometry_frame>
         <robot_base_frame>base_footprint</robot_base_frame>
         <!-- topic & re remappings -->
@@ -202,7 +202,7 @@
           <argument>--ros-args --remap /odom:=odom</argument>
         </ros>
         <publish_odom>true</publish_odom>
-        <publish_odom_tf>true</publish_odom_tf>
+        <publish_odom_tf>false</publish_odom_tf>
         <update_rate>100.0</update_rate>
       </plugin>
     </gazebo>

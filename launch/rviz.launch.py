@@ -10,15 +10,12 @@ def generate_launch_description():
 
     #Set the path to different files and folders
     pkg_share = FindPackageShare(package='mobile_bot').find('mobile_bot')
-    default_launch_dir = os.path.join(pkg_share, 'launch')
     default_model_path = os.path.join(pkg_share, 'urdf/mobile.urdf')
     urdf = open(default_model_path).read()
-    robot_name_in_urdf = 'mobile'
     default_rviz_config_path = os.path.join(pkg_share, 'rviz/mobile.rviz')
 
     #Launch configuration variables specific to simulation
     gui = LaunchConfiguration('gui')
-    model = LaunchConfiguration('model')
     rviz_config_file = LaunchConfiguration('rviz_config_file')
     use_robot_state_pub = LaunchConfiguration('use_robot_state_pub')
     use_rviz = LaunchConfiguration('use_rviz')
