@@ -13,6 +13,10 @@
     <material name="white"><color rgba="0.9 0.9 0.9 1.0"/></material>
     <material name="black"><color rgba="0.15 0.15 0.15 1.0"/></material>
 
+    
+    <link name = "base_footprint">
+    </link>
+
     <link name = "chassis">
         <visual>
             <origin xyz = "0 0 0" rpy = "0 0 0"/>
@@ -163,30 +167,37 @@
 
     <!--###################### JOINTS ########################-->
 
+    <joint name="base_link_joint" type="fixed">
+        <origin xyz="0 0 0.118" rpy="0 0 0"/>
+        <parent link= "base_footprint"/>
+        <child link = "chassis"/>
+        <axis xyz="0 0 0"/>
+    </joint>
+
     <joint name="front_left_wheel_joint" type ="continuous">
-        <origin xyz="-0.273 0.2237 -0.12" rpy="0 0 0"/>
-        <parent link = "chassis"/>
+        <origin xyz="-0.273 0.2237 0" rpy="0 0 0"/>
+        <parent link = "base_footprint"/>
         <child link = "right_front_wheel"/>
         <axis xyz="-1 0 0 "/>
     </joint>
 
     <joint name="rear_left_wheel_joint" type ="continuous">
-        <origin xyz="-0.273 -0.2237 -0.12" rpy="0 0 0"/>
-        <parent link = "chassis"/>
+        <origin xyz="-0.273 -0.2237 0" rpy="0 0 0"/>
+        <parent link = "base_footprint"/>
         <child link = "left_rear_wheel"/>
         <axis xyz="-1 0 0"/>
     </joint>
 
     <joint name="front_right_wheel_joint" type ="continuous">
-        <origin xyz="0.273 0.2237 -0.12" rpy="0 0 0"/>
-        <parent link = "chassis"/>
+        <origin xyz="0.273 0.2237 0" rpy="0 0 0"/>
+        <parent link = "base_footprint"/>
         <child link = "left_front_wheel"/>
         <axis xyz="-1 0 0"/>
     </joint>
 
     <joint name="rear_right_wheel_joint" type ="continuous">
-        <origin xyz="0.273 -0.2237 -0.12" rpy="0 0 0"/>
-        <parent link = "chassis"/>
+        <origin xyz="0.273 -0.2237 0" rpy="0 0 0"/>
+        <parent link = "base_footprint"/>
         <child link = "right_rear_wheel"/>
         <axis xyz="-1 0 0"/>
     </joint>

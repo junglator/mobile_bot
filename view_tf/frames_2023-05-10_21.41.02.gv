@@ -1,0 +1,17 @@
+digraph G {
+"map" -> "odom"[label=" Broadcaster: default_authority\nAverage rate: 120.476\nBuffer length: 2.1\nMost recent transform: 3135.983\nOldest transform: 3133.883\n"];
+"base_footprint" -> "chassis"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"odom" -> "base_footprint"[label=" Broadcaster: default_authority\nAverage rate: 125.123\nBuffer length: 2.03\nMost recent transform: 3135.803\nOldest transform: 3133.773\n"];
+"chassis" -> "battery"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"chassis" -> "camera_one"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"chassis" -> "imu_link"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"camera_one" -> "laser_link"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"base_footprint" -> "left_front_wheel"[label=" Broadcaster: default_authority\nAverage rate: 100.49\nBuffer length: 2.04\nMost recent transform: 3135.813\nOldest transform: 3133.773\n"];
+"base_footprint" -> "right_front_wheel"[label=" Broadcaster: default_authority\nAverage rate: 100.49\nBuffer length: 2.04\nMost recent transform: 3135.813\nOldest transform: 3133.773\n"];
+"base_footprint" -> "right_rear_wheel"[label=" Broadcaster: default_authority\nAverage rate: 100.49\nBuffer length: 2.04\nMost recent transform: 3135.813\nOldest transform: 3133.773\n"];
+"base_footprint" -> "left_rear_wheel"[label=" Broadcaster: default_authority\nAverage rate: 100.49\nBuffer length: 2.04\nMost recent transform: 3135.813\nOldest transform: 3133.773\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1683735062.743533"[ shape=plaintext ] ;
+}->"map";
+}

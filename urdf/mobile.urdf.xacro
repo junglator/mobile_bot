@@ -16,14 +16,7 @@
     <xacro:include filename ="$(find mobile_bot)/urdf/gazebo_description/physics.gazebo"/>
 
     <xacro:include filename ="$(find mobile_bot)/urdf/mobile.ros2_control"/>
-    <!--########################################################################################-->
-    <link name = "base_footprint"></link>
-
-    <joint name="base_link_joint" type="fixed">
-        <origin xyz="0 0 0.15" rpy="0 0 ${PI/2}"/>
-        <parent link= "base_footprint"/>
-        <child link = "chassis"/>
-        <axis xyz="0 0 0"/>
-    </joint>
+    <!--############################################################################################-->
+    
 
 </robot>
